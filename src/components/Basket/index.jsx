@@ -25,6 +25,7 @@ const Basket = ({
   };
 
   if (!basketData.line_items || !basketData.line_items.length) return loading();
+  console.log(basketData)
   return (
     <Container id="basket">
       <Grid container justify="center" spacing={4}>

@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import Products from "./components/Products";
 import Basket from "./components/Basket";
 import Checkout from "./components/Checkout";
+import { useCallback } from "react";
 
 const App = () => {
   const [products, setProducts] = useState([]);
@@ -14,14 +15,15 @@ const App = () => {
   const [orderInfo, setOrderInfo] = useState({});
   const [orderError, setOrderError] = useState("");
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     const response = await commerce.products.list();
     setProducts((response && response.data) || []);
-  };
+  }, []);;
 
   const fetchBasketData = async () => {
     const response = await commerce.cart.retrieve();
-    setBasketData(response);
+    
+    setBasketData(response.cart);
   };
 
   const addProduct = async (productId, quantity) => {

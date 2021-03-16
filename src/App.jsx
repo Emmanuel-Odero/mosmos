@@ -1,29 +1,29 @@
-import { useState, useEffect } from "react";
-import { CssBaseline } from "@material-ui/core";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { commerce } from "./lib/commerce";
-import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
-import Products from "./components/Products";
-import Basket from "./components/Basket";
-import Checkout from "./components/Checkout";
-import { useCallback } from "react";
+import { useState, useEffect } from 'react';
+import { CssBaseline } from '@material-ui/core';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { commerce } from './lib/commerce';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
+import Products from './views/Products';
+import { BasketPage as Basket } from './views/';
+import Checkout from './views/Checkout';
+import { useCallback } from 'react';
 
 const App = () => {
   const [products, setProducts] = useState([]);
   const [basketData, setBasketData] = useState({});
   const [orderInfo, setOrderInfo] = useState({});
-  const [orderError, setOrderError] = useState("");
+  const [orderError, setOrderError] = useState('');
 
   const fetchProducts = useCallback(async () => {
     const response = await commerce.products.list();
     setProducts((response && response.data) || []);
-  }, []);;
+  }, []);
 
   const fetchBasketData = async () => {
     const response = await commerce.cart.retrieve();
-    
-    setBasketData(response.cart);
+
+    setBasketData(response);
   };
 
   const addProduct = async (productId, quantity) => {
@@ -64,7 +64,7 @@ const App = () => {
     } catch (error) {
       setOrderError(
         (error.data && error.data.error && error.data.error.message) ||
-          "There is an error occurred"
+          'There is an error occurred'
       );
     }
   };
@@ -72,7 +72,7 @@ const App = () => {
   useEffect(() => {
     fetchProducts();
     fetchBasketData();
-  }, []);
+  }, [fetchProducts]);
 
   return (
     <Router>
@@ -83,14 +83,14 @@ const App = () => {
           totalCost={
             (basketData.subtotal &&
               basketData.subtotal.formatted_with_symbol) ||
-            "00.00"
+            '00.00'
           }
         />
         <Switch>
-          <Route exact path="/">
+          <Route exact path='/'>
             <Products products={products} addProduct={addProduct} />
           </Route>
-          <Route exact path="/basket">
+          <Route exact path='/basket'>
             <Basket
               basketData={basketData}
               updateProduct={updateProduct}
@@ -98,7 +98,7 @@ const App = () => {
               RemoveItemFromBasket={RemoveItemFromBasket}
             />
           </Route>
-          <Route exact path="/checkout">
+          <Route exact path='/checkout'>
             <Checkout
               orderInfo={orderInfo}
               orderError={orderError}
